@@ -20,28 +20,27 @@ else
     result = response.parsed_response
     File.write("searchresults.json", result.to_json)
     top_results = {}
-    top_results[result["items"][0]["volumeInfo"]["title"]] = result["items"][0]["volumeInfo"]["authors"]
-    top_results[result["items"][1]["volumeInfo"]["title"]] = result["items"][1]["volumeInfo"]["authors"]
-    top_results[result["items"][2]["volumeInfo"]["title"]] = result["items"][2]["volumeInfo"]["authors"]
-    top_results[result["items"][3]["volumeInfo"]["title"]] = result["items"][3]["volumeInfo"]["authors"]
-    top_results[result["items"][4]["volumeInfo"]["title"]] = result["items"][4]["volumeInfo"]["authors"]
+    top_results[result["items"][0]["volumeInfo"]["title"]] = [result["items"][0]["volumeInfo"]["authors"], result["items"][0]["volumeInfo"]["averageRating"]]
+    top_results[result["items"][1]["volumeInfo"]["title"]] = [result["items"][1]["volumeInfo"]["authors"], result["items"][1]["volumeInfo"]["averageRating"]]
+    top_results[result["items"][2]["volumeInfo"]["title"]] = [result["items"][2]["volumeInfo"]["authors"], result["items"][2]["volumeInfo"]["averageRating"]]
+    top_results[result["items"][3]["volumeInfo"]["title"]] = [result["items"][3]["volumeInfo"]["authors"], result["items"][3]["volumeInfo"]["averageRating"]]
+    top_results[result["items"][4]["volumeInfo"]["title"]] = [result["items"][4]["volumeInfo"]["authors"], result["items"][4]["volumeInfo"]["averageRating"]]
     puts "You're top search results are:"
-    top_results.each { |book, author| puts "#{book} by #{author[0]}" }
-    # don't forget to add reviews? 
-end
-puts "Would you like to add one of these titles to your calendar? (y or n)"
-calendar_action = gets.chomp.downcase
-if calendar_action == "y" || calendar_action == "yes"
-    # add this to the calendar CSV
-elsif calendar_action == "n" || calendar_action == "no"
-    puts "Not for you, eh? No worries, we can search for a different book."
-else 
-    puts "Invalid answer"
+    top_results.each do |book, author| 
+        puts "#{book} by #{author[0][0]}."
+    end
+    best_rated = top_results.max_by{ |rating| }
+    puts "#{best_rated[0]} has the highest star rating."
 end
 
-# "authors", "title" , "averageRating"
-# title
-result["items"][0]["volumeInfo"]["title"]
-#author
-result["items"][0]["volumeInfo"]["authors"]
+puts "Would you like to add one of these titles to your calendar? (y or n)"
+calendar_action = gets.chomp.downcase
+if calendar_action == "y" 
+    # add this to the calendar CSV
+elsif calendar_action == "n"
+    puts "Not for you, eh? No worries, we can search for a different book."
+else 
+    puts "We need a 'y' or 'n' only!"
+end
+
 
