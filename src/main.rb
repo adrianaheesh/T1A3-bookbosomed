@@ -2,7 +2,9 @@ require 'httparty'
 require 'colorize'
 require 'csv'
 require 'smarter_csv'
+
 # if empty write headers
+# add feature to check for file first? Idk HOW lol
 # CSV.open("bookclub.csv", "a") do |csv| 
 #     csv << [:month, :title, :author, :rating, :review]
 # end
@@ -52,18 +54,13 @@ def calendar(top_results)
     book_to_add = gets.chomp.to_i - 1
     puts "Which month would you like to add this book to?"
     month_action = gets.chomp.downcase 
-    # CSV.open("bookclub.csv", "a") do |csv| 
-    #     csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
-    # end
-    # to write over existing month: 
     data = SmarterCSV.process("bookclub.csv")
-    puts data
     data.each_with_index do |row, index|
         if month_action == row[:month]
             puts "This will override the book already allocated to #{month_action.capitalize}, do you want to continue? (y or n)"
             override_action = gets.chomp.downcase
-                if override_action == "y"
-                    data[index] = {
+            if override_action == "y"
+                data[index] = {
                     month: month_action,
                     title: top_results[book_to_add][:title],
                     author: top_results[book_to_add][:author],
@@ -71,21 +68,24 @@ def calendar(top_results)
                     review: nil
                 }
                 puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
-                end
+            else override_action == "n"
+                puts "Which month would you like to add this book to instead?"
+                month_action = gets.chomp.downcase
+            end
         else 
-            puts "Which month would you like to allocate instead?"
-            month_action = gets.chomp.downcase
-        end
-    end     
-
-    CSV.open("bookclub.csv", "w") do |csv| 
-        csv << [:month, :title, :author, :rating, :review]
+            CSV.open("bookclub.csv", "w") do |csv| 
+                csv << [:month, :title, :author, :rating, :review]
+            end
+            data.each do |row|
+                CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
+            end
+            puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
+        end 
     end
 end
-# puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
-# updated_data = data.each do |row|
-#     CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
-# end
+    # CSV.open("bookclub.csv", "a") do |csv| 
+    #     csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+    # end
 
 
 puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
@@ -117,8 +117,3 @@ elsif options_action == "write review"
 else 
     # display help menu
 end
-
-
-# array.find - 
-# potentially use .map with if statement
-# 
