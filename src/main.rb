@@ -1,11 +1,11 @@
 require 'httparty'
-require 'pp'
 require 'colorize'
 require 'csv'
-
-CSV.open("bookclub.csv", "w") do |csv| 
-    csv << [:month, :title, :author, :rating, :review]
-end
+require 'smarter_csv'
+# if empty write headers
+# CSV.open("bookclub.csv", "a") do |csv| 
+#     csv << [:month, :title, :author, :rating, :review]
+# end
 
 # list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
 genres = [
@@ -18,11 +18,8 @@ genres = [
     "romance",
     "thriller",
     "history",
-    "childrens",
     "science fiction"
 ]
-
-top_results = []
 
 # google book search results, outputs the top 5 results into an array, then highlights the title with the highest star rating
 def search(keyword)
@@ -31,31 +28,14 @@ def search(keyword)
     result = response.parsed_response
     File.write("searchresults.json", result.to_json)
     
-    top_results[0] = { 
-        title: result["items"][0]["volumeInfo"]["title"], 
-        author: result["items"][0]["volumeInfo"]["authors"],
-        rating: result["items"][0]["volumeInfo"]["averageRating"]
-    }
-    top_results[1] = { 
-        title: result["items"][1]["volumeInfo"]["title"], 
-        author: result["items"][1]["volumeInfo"]["authors"],
-        rating: result["items"][1]["volumeInfo"]["averageRating"]
-    }
-    top_results[2] = { 
-        title: result["items"][2]["volumeInfo"]["title"], 
-        author: result["items"][2]["volumeInfo"]["authors"],
-        rating: result["items"][2]["volumeInfo"]["averageRating"]
-    }
-    top_results[3] = { 
-        title: result["items"][3]["volumeInfo"]["title"], 
-        author: result["items"][3]["volumeInfo"]["authors"],
-        rating: result["items"][3]["volumeInfo"]["averageRating"]
-    }
-    top_results[4] = { 
-        title: result["items"][4]["volumeInfo"]["title"], 
-        author: result["items"][4]["volumeInfo"]["authors"],
-        rating: result["items"][4]["volumeInfo"]["averageRating"]
-    }
+    top_results = []
+    result["items"].each do |item|
+        top_results.push({
+            title: item["volumeInfo"]["title"], 
+            author: item["volumeInfo"]["authors"], 
+            rating: item["volumeInfo"]["averageRating"]
+        })
+    end
     
     puts "You're top search results are:"
     top_results.each do |book| 
@@ -64,18 +44,49 @@ def search(keyword)
 
     best_rated = top_results.max_by{ |rating| }
     puts "The result with the highest rating is: #{best_rated[:title].colorize(background: :blue)} by #{best_rated[:author][0]}."
+    return top_results
 end
 
-def calendar
+def calendar(top_results)
     puts "Which number would you like to add?"
     book_to_add = gets.chomp.to_i - 1
     puts "Which month would you like to add this book to?"
     month_action = gets.chomp.downcase 
-    CSV.open("bookclub.csv", "a") do |csv| 
-        csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+    # CSV.open("bookclub.csv", "a") do |csv| 
+    #     csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+    # end
+    # to write over existing month: 
+    data = SmarterCSV.process("bookclub.csv")
+    puts data
+    data.each_with_index do |row, index|
+        if month_action == row[:month]
+            puts "This will override the book already allocated to #{month_action.capitalize}, do you want to continue? (y or n)"
+            override_action = gets.chomp.downcase
+                if override_action == "y"
+                    data[index] = {
+                    month: month_action,
+                    title: top_results[book_to_add][:title],
+                    author: top_results[book_to_add][:author],
+                    rating: top_results[book_to_add][:rating],
+                    review: nil
+                }
+                puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
+                end
+        else 
+            puts "Which month would you like to allocate instead?"
+            month_action = gets.chomp.downcase
+        end
+    end     
+
+    CSV.open("bookclub.csv", "w") do |csv| 
+        csv << [:month, :title, :author, :rating, :review]
     end
-    # puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
 end
+# puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
+# updated_data = data.each do |row|
+#     CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
+# end
+
 
 puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
 options_action = gets.chomp.downcase
@@ -84,14 +95,14 @@ if options_action == "find book"
     search_method = gets.chomp.downcase
     if search_method == "random"
         random_book = genres.sample
-        search(random_book)
+        search_results = search(random_book)
     else
-        search(search_method)
+        search_results = search(search_method)
     end
     puts "Would you like to add one of these titles to your calendar? (y or n)"
     calendar_action = gets.chomp.downcase
     if calendar_action == "y" 
-        calendar
+        calendar(search_results)
     elsif calendar_action == "n"
         puts "No worries, let's do a new search."
     else
@@ -102,7 +113,12 @@ elsif options_action == "view calendar"
         puts "For the month of #{row['month'].capitalize}, you are reading #{row['title']}."
     end
 elsif options_action == "write review"
-    
+    # write review
 else 
     # display help menu
 end
+
+
+# array.find - 
+# potentially use .map with if statement
+# 
