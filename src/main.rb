@@ -1,28 +1,36 @@
-# pseduocode
-# ask user if they would prefer to search for a book or randomly generate a book
-# if search, trawl through the bookreads API for matching data
-# if random, generate a random output from the API
-# ask if user would like to add this to their calendar
-# if yes, ask which month
-# if no, loop back to line 2
-
 require 'httparty'
 require 'pp'
 require 'colorize'
 require 'csv'
 
-# accessing Google Books API
-puts "Let's find you a book to read! Type the title of the book you're looking for, or 'random' to get one generated for you."
-search_method = gets.chomp.downcase
-if search_method == "random"
-    # iterate through API and randomly output a book title
-else
-    url = "https://www.googleapis.com/books/v1/volumes?q=#{search_method}&maxResults=5&key=AIzaSyAPth8B14lVUFScccXBmq8nu4X6H9aCSOw"
+CSV.open("bookclub.csv", "w") do |csv| 
+    csv << [:month, :title, :author, :rating, :review]
+end
+
+# list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
+genres = [
+    "fantasy",
+    "biography",
+    "autobiography",
+    "fiction",
+    "non-fiction",
+    "young adult",
+    "romance",
+    "thriller",
+    "history",
+    "childrens",
+    "science fiction"
+]
+
+top_results = []
+
+# google book search results, outputs the top 5 results into an array, then highlights the title with the highest star rating
+def search(keyword)
+    url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=AIzaSyAPth8B14lVUFScccXBmq8nu4X6H9aCSOw"
     response = HTTParty.get(url)
     result = response.parsed_response
     File.write("searchresults.json", result.to_json)
     
-    top_results = []
     top_results[0] = { 
         title: result["items"][0]["volumeInfo"]["title"], 
         author: result["items"][0]["volumeInfo"]["authors"],
@@ -56,26 +64,45 @@ else
 
     best_rated = top_results.max_by{ |rating| }
     puts "The result with the highest rating is: #{best_rated[:title].colorize(background: :blue)} by #{best_rated[:author][0]}."
-
 end
 
-puts "Would you like to add one of these titles to your calendar? (y or n)"
-calendar_action = gets.chomp.downcase
-if calendar_action == "y" 
+def calendar
     puts "Which number would you like to add?"
     book_to_add = gets.chomp.to_i - 1
     puts "Which month would you like to add this book to?"
     month_action = gets.chomp.downcase 
-    # push top_results.index(title_action) to a File.write CSV 
-        # if/else for existing month data
-        File.write("calendar.csv", data.join("\n"), mode: "a") # serialisation 
-    puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
-elsif calendar_action == "n"
-    puts "No worries, we can do a new search."
-else
-    puts "Sorry, that's not an option."
+    CSV.open("bookclub.csv", "a") do |csv| 
+        csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+    end
+    # puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
 end
 
-
-
-
+puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
+options_action = gets.chomp.downcase
+if options_action == "find book"
+    puts "Let's find you a book to read! Type the title of the book you're looking for, or 'random' to get one generated for you."
+    search_method = gets.chomp.downcase
+    if search_method == "random"
+        random_book = genres.sample
+        search(random_book)
+    else
+        search(search_method)
+    end
+    puts "Would you like to add one of these titles to your calendar? (y or n)"
+    calendar_action = gets.chomp.downcase
+    if calendar_action == "y" 
+        calendar
+    elsif calendar_action == "n"
+        puts "No worries, let's do a new search."
+    else
+        puts "Sorry, that's not an option."
+    end
+elsif options_action == "view calendar"
+    CSV.foreach("bookclub.csv", headers: true) do |row|
+        puts "For the month of #{row['month'].capitalize}, you are reading #{row['title']}."
+    end
+elsif options_action == "write review"
+    
+else 
+    # display help menu
+end
