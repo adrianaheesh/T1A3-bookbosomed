@@ -43,12 +43,14 @@ def search(keyword)
     return top_results
 end
 
+# method for adding a book to the calendar
 def calendar(top_results)
     puts "Which number would you like to add?"
     book_to_add = gets.chomp.to_i - 1
     puts "Which month would you like to add this book to?"
     month_action = gets.chomp.downcase 
     data = SmarterCSV.process("bookclub.csv")
+    # this will need to be a method because it is repeated for the review section
     data.each_with_index do |row, index|
         if month_action == row[:month]
             puts "This will override the book already allocated to #{month_action.capitalize}, do you want to continue? (y or n)"
@@ -81,10 +83,20 @@ def calendar(top_results)
             end
         end 
     end
-    puts "Great, would you like to see the calendar? (y or n)"
+    puts "Would you like to see the calendar? (y or n)"
     options_action = gets.chomp.downcase
+    if options_action == "y"
+        view_calendar
+    end
 end
 
+def view_calendar
+    # potentially order the output so the data goes through the calendar month in order of jan-dec not as input (store each month has as a variable?)
+    CSV.foreach("bookclub.csv", headers: true) do |row|
+        # author outputs as array because sometimes there is more than one author
+        puts "In #{row['month'].capitalize.colorize(:red)}, you're reading #{row['title'].colorize(:blue)} by #{row['author'].colorize(:yellow)}."
+    end
+end
 
 puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
 options_action = gets.chomp.downcase
@@ -107,10 +119,7 @@ if options_action == "find book"
         puts "Sorry, that's not an option."
     end
 elsif options_action == "view calendar"
-    # potentially order the output so the data goes through the calendar month in order of jan-dec not as input (store each month has as a variable?)
-    CSV.foreach("bookclub.csv", headers: true) do |row|
-        puts "In #{row['month'].capitalize.colorize(:red)}, you're reading #{row['title'].colorize(:blue)} by #{row['author'].colorize(:yellow)}."
-    end
+    view_calendar
 elsif options_action == "write review"
     # write review
     # going to have to repeat the steps of overriding the existing csv 
