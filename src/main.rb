@@ -73,19 +73,22 @@ def calendar(top_results)
                 month_action = gets.chomp.downcase
             end
         else 
+            # override the existing csv and push titles
             CSV.open("bookclub.csv", "w") do |csv| 
                 csv << [:month, :title, :author, :rating, :review]
             end
+            # iterate through the variable 'data' and push the existing row values into the file
             data.each do |row|
                 CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
+            end
+            # add the new book to the csv file
+            CSV.open("bookclub.csv", "a") do |csv| 
+                csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
             end
             puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
         end 
     end
 end
-    # CSV.open("bookclub.csv", "a") do |csv| 
-    #     csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
-    # end
 
 
 puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
@@ -114,6 +117,7 @@ elsif options_action == "view calendar"
     end
 elsif options_action == "write review"
     # write review
+    # going to have to repeat the steps of overriding the existing csv 
 else 
     # display help menu
 end
