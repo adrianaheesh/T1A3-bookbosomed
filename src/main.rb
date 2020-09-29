@@ -3,12 +3,6 @@ require 'colorize'
 require 'csv'
 require 'smarter_csv'
 
-# if empty write headers
-# add feature to check for file first? Idk HOW lol
-# CSV.open("bookclub.csv", "a") do |csv| 
-#     csv << [:month, :title, :author, :rating, :review]
-# end
-
 # list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
 genres = [
     "fantasy",
@@ -85,9 +79,10 @@ def calendar(top_results)
             CSV.open("bookclub.csv", "a") do |csv| 
                 csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
             end
-            puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
         end 
     end
+    puts "Great, would you like to see the calendar? (y or n)"
+    options_action = gets.chomp.downcase
 end
 
 
@@ -112,12 +107,13 @@ if options_action == "find book"
         puts "Sorry, that's not an option."
     end
 elsif options_action == "view calendar"
+    # potentially order the output so the data goes through the calendar month in order of jan-dec not as input (store each month has as a variable?)
     CSV.foreach("bookclub.csv", headers: true) do |row|
-        puts "For the month of #{row['month'].capitalize}, you are reading #{row['title']}."
+        puts "In #{row['month'].capitalize.colorize(:red)}, you're reading #{row['title'].colorize(:blue)} by #{row['author'].colorize(:yellow)}."
     end
 elsif options_action == "write review"
     # write review
     # going to have to repeat the steps of overriding the existing csv 
 else 
-    # display help menu
+    # display help menu - command line arguments? 
 end
