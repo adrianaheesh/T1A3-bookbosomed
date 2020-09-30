@@ -35,7 +35,7 @@ def calendar(top_results)
     data.each_with_index do |row, index|
         if month_action == row[:month]
             puts "You already have a book for #{month_action.capitalize}."
-            override_action = prompt.yes?("Would you like to search again?")
+            override_action = $prompt.yes?("Would you like to search again?")
             if override_action == true
                 data[index] = {
                     month: month_action,
@@ -64,7 +64,7 @@ def calendar(top_results)
     CSV.open("bookclub.csv", "a") do |csv| 
         csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
     end
-    options_action = prompt.yes?("Would you like to see your club calendar?")
+    options_action = $prompt.yes?("Would you like to see your club calendar?")
     if options_action == true
         view_calendar
     end

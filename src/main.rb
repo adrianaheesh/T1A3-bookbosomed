@@ -3,13 +3,10 @@ require 'colorize'
 require 'csv'
 require 'smarter_csv'
 require 'tty-prompt'
-require 'tty-font'
+require 'pastel'
 require_relative 'methods.rb'
 
-font = TTY::Font.new(:block)
 
-puts font.write("Book-Bosomed")
-puts "Welcome to Book-Bosomed!"
 
 #login menu goes here
 
