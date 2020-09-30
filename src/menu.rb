@@ -11,6 +11,7 @@ main_menu = {
     "Get help" => 4
 }
 
+loop do
 menu_action = prompt.select("What what you like to do?", main_menu, show_help: :always)
 
 if menu_action == 1
@@ -22,19 +23,26 @@ if menu_action == 1
         search_results = search(search_method)
     end
     add_to_calendar = prompt.yes?("Do you want to add one of these titles to your club calendar?")
-        if add_to_calendar == true
-            calendar(search_results)
-        else
-            menu_action = prompt.select
-            search_method = find_a_book_title
+    if add_to_calendar == true
+        book_data = []
+        search_results.each do |headings, book_info| 
+            book_data.push(book_info)
         end
+        p book_data
+        # book_to_add = prompt.select("Which book would you like to add to the calendar?", search_results[:title], show_help: :always)
+    else
+        loop until search_again == false
+        search_again = prompt.yes?("Would you like to search again?")
+        search_method = find_a_book_title
+    end
 elsif menu_action == 2
     view_calendar
 elsif menu_action == 3
+    # call rewrite method
 else menu_action == 4
     # help menu
 end
-
+end
 
 # method for getting search parameters
 # method for outputting the csv

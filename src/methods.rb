@@ -1,7 +1,8 @@
 require_relative 'apikey.rb'
+require 'tty-table'
 
 def search(keyword)
-    url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=#{apikey}"
+    url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=#{$apikey}"
     response = HTTParty.get(url)
     result = response.parsed_response
     File.write("searchresults.json", result.to_json)
@@ -14,30 +15,28 @@ def search(keyword)
             rating: item["volumeInfo"]["averageRating"]
         })
     end
-    
+        
     puts "You're top search results are:"
     top_results.each do |book| 
         puts "#{top_results.index(book) + 1}. #{book[:title]} by #{book[:author][0]}."
     end
 
     best_rated = top_results.max_by{ |rating| }
-    puts "The result with the highest rating is: #{best_rated[:title].colorize(background: :blue)} by #{best_rated[:author][0].colorize(background: :blue)}."
+    puts "The result with the highest rating is: #{best_rated[:title].colorize(:purple)} by #{best_rated[:author][0].colorize(:purple)}."
     return top_results
 end
 
 # method for adding a book to the calendar
 def calendar(top_results)
-    puts "Which number would you like to add?"
-    book_to_add = gets.chomp.to_i - 1
     puts "Which month would you like to add this book to?"
     month_action = gets.chomp.downcase 
     data = SmarterCSV.process("bookclub.csv")
     # this will need to be a method because it is repeated for the review section
     data.each_with_index do |row, index|
         if month_action == row[:month]
-            puts "You already have a book for #{month_action.capitalize}, would you like to override this book allocation? (y or n)"
-            override_action = gets.chomp.downcase
-            if override_action == "y"
+            puts "You already have a book for #{month_action.capitalize}."
+            override_action = prompt.yes?("Would you like to search again?")
+            if override_action == true
                 data[index] = {
                     month: month_action,
                     title: top_results[book_to_add][:title],
@@ -59,15 +58,14 @@ def calendar(top_results)
             data.each do |row|
                 CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
             end
-            # add the new book to the csv file
+            add the new book to the csv file
         end 
-        CSV.open("bookclub.csv", "a") do |csv| 
-            csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
-        end
     end
-    puts "Would you like to see the calendar? (y or n)"
-    options_action = gets.chomp.downcase
-    if options_action == "y"
+    CSV.open("bookclub.csv", "a") do |csv| 
+        csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+    end
+    options_action = prompt.yes?("Would you like to see your club calendar?")
+    if options_action == true
         view_calendar
     end
 end

@@ -64,6 +64,11 @@ GEM
       thor (>= 0.20.3, < 2.0)
     rake (13.0.1)
     smarter_csv (1.2.6)
+    strings (0.2.0)
+      strings-ansi (~> 0.2)
+      unicode-display_width (~> 1.5)
+      unicode_utils (~> 1.4)
+    strings-ansi (0.2.0)
     thor (1.0.1)
     thread_safe (0.3.6)
     tty-color (0.5.2)
@@ -77,8 +82,14 @@ GEM
       tty-screen (~> 0.8)
       wisper (~> 2.0)
     tty-screen (0.8.1)
+    tty-table (0.12.0)
+      pastel (~> 0.8)
+      strings (~> 0.2.0)
+      tty-screen (~> 0.8)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
+    unicode-display_width (1.7.0)
+    unicode_utils (1.4.0)
     wisper (2.0.1)
     zeitwerk (2.4.0)
 
@@ -93,6 +104,7 @@ DEPENDENCIES
   smarter_csv (~> 1.2)
   tty-font (~> 0.5.0)
   tty-prompt (~> 0.22.0)
+  tty-table
 
 BUNDLED WITH
    2.1.4

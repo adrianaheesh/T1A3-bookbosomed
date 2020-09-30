@@ -3,20 +3,15 @@ require 'colorize'
 require 'csv'
 require 'smarter_csv'
 require 'tty-prompt'
-require 'dotenv'
 require 'tty-font'
 require_relative 'methods.rb'
 
-Dotenv.load
 font = TTY::Font.new(:block)
 
 puts font.write("Book-Bosomed")
 puts "Welcome to Book-Bosomed!"
 
 #login menu goes here
-
-
-
 
 # list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
 genres = [
@@ -33,8 +28,6 @@ genres = [
 ]
 
 # google book search results, outputs the top 5 results into an array, then highlights the title with the highest star rating
-
-
 
 # puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
 # options_action = gets.chomp.downcase
