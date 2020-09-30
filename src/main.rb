@@ -3,7 +3,9 @@ require 'colorize'
 require 'csv'
 require 'smarter_csv'
 require 'tty-prompt'
+require 'dotenv'
 
+Dotenv.load
 # list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
 genres = [
     "fantasy",
@@ -20,7 +22,7 @@ genres = [
 
 # google book search results, outputs the top 5 results into an array, then highlights the title with the highest star rating
 def search(keyword)
-    url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=AIzaSyAPth8B14lVUFScccXBmq8nu4X6H9aCSOw"
+    url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=ENV[API_KEY]"
     response = HTTParty.get(url)
     result = response.parsed_response
     File.write("searchresults.json", result.to_json)

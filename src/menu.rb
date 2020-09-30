@@ -10,6 +10,7 @@ main_menu = {
     "Get help" => 4
 }
 
+# method? 
 menu_action = prompt.select("What what you like to do?", main_menu, help: "(Use the up and down keys & then key enter to choose)", show_help: :always )
 
 if menu_action == 1
@@ -21,10 +22,15 @@ if menu_action == 1
     else
         search_results = search(search_method)
     end
-elsif menu_action == 2
-    view_calendar
+    add_to_calendar = prompt.yes?("Do you want to add one of these titles to your club calendar?")
+    if add_to_calendar == true
+        calendar(search_results)
+    else
+        puts "Okay let's search again."
+    end
 elsif menu_action == 3
     # call review method
 else menu_action == 4
     # help menu
 end
+

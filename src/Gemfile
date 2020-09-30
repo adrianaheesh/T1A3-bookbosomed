@@ -13,3 +13,7 @@ gem "colorize", "~> 0.8.1"
 gem "smarter_csv", "~> 1.2"
 
 gem "tty-prompt", "~> 0.22.0"
+
+gem "dotenv-rails", "~> 2.7"
+
+gem "dotenv", "~> 2.7"
