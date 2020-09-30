@@ -11,3 +11,5 @@ gem "httparty", "~> 0.18.1"
 gem "colorize", "~> 0.8.1"
 
 gem "smarter_csv", "~> 1.2"
+
+gem "tty-prompt", "~> 0.22.0"

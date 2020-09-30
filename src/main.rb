@@ -2,6 +2,7 @@ require 'httparty'
 require 'colorize'
 require 'csv'
 require 'smarter_csv'
+require 'tty-prompt'
 
 # list of book genres for randomize funtion - one of these is sampled and searched in order to enable random search function
 genres = [
@@ -53,7 +54,7 @@ def calendar(top_results)
     # this will need to be a method because it is repeated for the review section
     data.each_with_index do |row, index|
         if month_action == row[:month]
-            puts "This will override the book already allocated to #{month_action.capitalize}, do you want to continue? (y or n)"
+            puts "You already have a book for #{month_action.capitalize}, would you like to override this book allocation? (y or n)"
             override_action = gets.chomp.downcase
             if override_action == "y"
                 data[index] = {
@@ -78,10 +79,10 @@ def calendar(top_results)
                 CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
             end
             # add the new book to the csv file
-            CSV.open("bookclub.csv", "a") do |csv| 
-                csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
-            end
         end 
+        CSV.open("bookclub.csv", "a") do |csv| 
+            csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+        end
     end
     puts "Would you like to see the calendar? (y or n)"
     options_action = gets.chomp.downcase
@@ -98,31 +99,31 @@ def view_calendar
     end
 end
 
-puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
-options_action = gets.chomp.downcase
-if options_action == "find book"
-    puts "Let's find you a book to read! Type the title of the book you're looking for, or 'random' to get one generated for you."
-    search_method = gets.chomp.downcase
-    if search_method == "random"
-        random_book = genres.sample
-        search_results = search(random_book)
-    else
-        search_results = search(search_method)
-    end
-    puts "Would you like to add one of these titles to your calendar? (y or n)"
-    calendar_action = gets.chomp.downcase
-    if calendar_action == "y" 
-        calendar(search_results)
-    elsif calendar_action == "n"
-        puts "No worries, let's do a new search."
-    else
-        puts "Sorry, that's not an option."
-    end
-elsif options_action == "view calendar"
-    view_calendar
-elsif options_action == "write review"
-    # write review
-    # going to have to repeat the steps of overriding the existing csv 
-else 
-    # display help menu - command line arguments? 
-end
+# puts "Welcome to the Book Bosomed app! What would you like to do? (Options: find book, view calendar, write review, get help)"
+# options_action = gets.chomp.downcase
+# if options_action == "find book"
+#     puts "Let's find you a book to read! Type the title of the book you're looking for, or 'random' to get one generated for you."
+#     search_method = gets.chomp.downcase
+#     if search_method == "random"
+#         random_book = genres.sample
+#         search_results = search(random_book)
+#     else
+#         search_results = search(search_method)
+#     end
+#     puts "Would you like to add one of these titles to your calendar? (y or n)"
+#     calendar_action = gets.chomp.downcase
+#     if calendar_action == "y" 
+#         calendar(search_results)
+#     elsif calendar_action == "n"
+#         puts "No worries, let's do a new search."
+#     else
+#         puts "Sorry, that's not an option."
+#     end
+# elsif options_action == "view calendar"
+#     view_calendar
+# elsif options_action == "write review"
+#     # write review
+#     # going to have to repeat the steps of overriding the existing csv 
+# else 
+#     # display help menu - command line arguments? 
+# end
