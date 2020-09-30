@@ -1,5 +1,6 @@
 require 'tty-prompt'
 require_relative 'main.rb'
+require_relative 'methods.rb'
 
 prompt = TTY::Prompt.new
 
@@ -10,12 +11,10 @@ main_menu = {
     "Get help" => 4
 }
 
-# method? 
-menu_action = prompt.select("What what you like to do?", main_menu, help: "(Use the up and down keys & then key enter to choose)", show_help: :always )
+menu_action = prompt.select("What what you like to do?", main_menu, show_help: :always)
 
 if menu_action == 1
-    puts "Let's find you a book to read! Type the title of the book or author you're looking for, or 'random' to get one generated for you."
-    search_method = gets.chomp.downcase
+    search_method = find_a_book_title
     if search_method == "random"
         random_book = genres.sample
         search_results = search(random_book)
@@ -23,14 +22,21 @@ if menu_action == 1
         search_results = search(search_method)
     end
     add_to_calendar = prompt.yes?("Do you want to add one of these titles to your club calendar?")
-    if add_to_calendar == true
-        calendar(search_results)
-    else
-        puts "Okay let's search again."
-    end
+        if add_to_calendar == true
+            calendar(search_results)
+        else
+            menu_action = prompt.select
+            search_method = find_a_book_title
+        end
+elsif menu_action == 2
+    view_calendar
 elsif menu_action == 3
-    # call review method
 else menu_action == 4
     # help menu
 end
 
+
+# method for getting search parameters
+# method for outputting the csv
+# method for pushing new data to csv
+# method for overriding data to csv

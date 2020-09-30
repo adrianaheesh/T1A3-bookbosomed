@@ -68,6 +68,7 @@ GEM
     thread_safe (0.3.6)
     tty-color (0.5.2)
     tty-cursor (0.7.1)
+    tty-font (0.5.0)
     tty-prompt (0.22.0)
       pastel (~> 0.8)
       tty-reader (~> 0.8)
@@ -90,6 +91,7 @@ DEPENDENCIES
   dotenv-rails (~> 2.7)
   httparty (~> 0.18.1)
   smarter_csv (~> 1.2)
+  tty-font (~> 0.5.0)
   tty-prompt (~> 0.22.0)
 
 BUNDLED WITH
