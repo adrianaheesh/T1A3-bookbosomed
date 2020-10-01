@@ -32,37 +32,35 @@ end
 # method for adding a book to the calendar
 def add_to_calendar(top_results, book_to_add)
     month_action = $prompt.select("Which month would you like to add this book to?", $months, active_color: :bright_blue)    
-    
-    # use gem to turn csv into array of hashes
     data = SmarterCSV.process("bookclub.csv")
 
-    # iterate through the array of hashes and determing if the month is taken or not
-    data.each do |row|
+    data.each_with_index do |row, index|
         if month_action == row[:month]
             $month_taken = true
-        else
-            $month_taken = false
+            $new_month_allocation_index = index
+            break
         end
     end
 
-    if $month_taken == true
+    case
+    when $month_taken == true
         puts "You've already allocated a book to #{month_action}."
-        override_action = $prompt.yes?("Do you want to override this month?", active_color: :bright_blue)
-        if override_action == true
-            # figure out how to override data lol
-                # data[index] = {
-                #     month: month_action,
-                #     title: top_results[book_to_add][:title],
-                #     author: top_results[book_to_add][:author],
-                #     rating: top_results[book_to_add][:rating],
-                #     review: nil
-                # }
+        overwrite_action = $prompt.yes?("Do you want to overwrite this month?", active_color: :bright_blue)
+        if overwrite_action == true
+            data[$new_month_allocation_index] = {
+                month: month_action,
+                title: top_results[book_to_add][:title],
+                author: top_results[book_to_add][:author],
+                rating: top_results[book_to_add][:rating],
+                review: nil
+            }
             puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
         else 
             puts "No worries, pick a new month to allocate your book to." 
             month_action = $prompt.select("Which month would you like to add this book to?", $months, active_color: :bright_blue)
         end
-    else $month_taken == false
+    else 
+        # $month_taken == !true
         CSV.open("bookclub.csv", "a") do |csv| 
             csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
         end
@@ -85,7 +83,7 @@ end
 
 
 # else  
-#     # override the existing csv and push titles
+#     # overwrite the existing csv and push titles
 #     CSV.open("bookclub.csv", "w") do |csv| 
 #         csv << [:month, :title, :author, :rating, :review]
 #     end
