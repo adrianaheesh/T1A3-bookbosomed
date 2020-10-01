@@ -1,12 +1,11 @@
 require 'tty-prompt'
 require 'tty-font'
-require_relative 'main.rb'
+# require_relative 'main.rb'
 require_relative 'methods.rb'
 
 font = TTY::Font.new(:block)
 $prompt = TTY::Prompt.new
 pastel = Pastel.new
-error = pastel.red.bold.detach # defining how each error will look
 
 puts font.write("Book-Bosomed")
 puts pastel.bright_blue.inverse("                                             Welcome to Book-Bosomed!                                             \n")

@@ -1,9 +1,12 @@
 require_relative 'apikey.rb'
-require_relative 'main.rb'
+# require_relative 'main.rb'
 require_relative 'data-sets.rb'
 require 'pastel'
 require 'tty-table'
 require 'csv'
+require 'httparty'
+require 'smarter_csv'
+require 'tty-prompt'
 
 $pastel = Pastel.new
 
@@ -134,9 +137,11 @@ def review_a_book
             end
         end
         
-        if $month_index == nil
+        case
+        when $month_index == nil
             puts "Sorry, that month doesn't have any books allocated to it yet."
         else 
+            puts "#{month_action}'s book is #{books_data[$month_index][:title]}."
             book_review = $prompt.ask("Please type your review", active_color: :bright_blue)
             # assign this review to the correct index within this variable
             books_data[$month_index][:review] = book_review

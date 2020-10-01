@@ -1,0 +1,5 @@
+require 'httparty'
+require 'csv'
+require 'smarter_csv'
+require 'tty-prompt'
+require_relative 'methods.rb'
