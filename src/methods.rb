@@ -122,29 +122,48 @@ def find_a_book_title
     return search_method
 end
 
+# method to find a month
+def find_a_month
+    $month_action = $prompt.select("Which month's book would you like to review?", $months, active_color: :bright_blue)    
+    # books_data is an array of hashes thanks to SmarterCSV gem
+    $books_data = SmarterCSV.process("bookclub.csv")
+    
+    # iterate through the array, and if the month for that row matches the users selection, output this row's index into a variable
+    $books_data.each_with_index do |row, index|
+        if $month_action == row[:month]
+            $month_index = index
+            break
+        end
+    end
+    return $month_index
+end
+
 # method to review a book
 def review_a_book
     loop do
-        month_action = $prompt.select("Which month's book would you like to review?", $months, active_color: :bright_blue)    
-        # books_data is an array of hashes
-        books_data = SmarterCSV.process("bookclub.csv")
+        # create a method to search through the months?
+
+        # month_action = $prompt.select("Which month's book would you like to review?", $months, active_color: :bright_blue)    
+        # # books_data is an array of hashes
+        # books_data = SmarterCSV.process("bookclub.csv")
         
-        # iterate through the array, and if the month for that row matches the users selection, output this row's index into a variable
-        books_data.each_with_index do |row, index|
-            if month_action == row[:month]
-                $month_index = index
-                break
-            end
-        end
+        # # iterate through the array, and if the month for that row matches the users selection, output this row's index into a variable
+        # books_data.each_with_index do |row, index|
+        #     if month_action == row[:month]
+        #         $month_index = index
+        #         break
+        #     end
+        # end
+        find_a_month
         
         case
         when $month_index == nil
             puts "Sorry, that month doesn't have any books allocated to it yet."
         else 
-            puts "#{month_action}'s book is #{books_data[$month_index][:title]}."
+            puts "#{$month_action}'s book is #{$books_data[$month_index][:title]}."
             book_review = $prompt.ask("Please type your review", active_color: :bright_blue)
             # assign this review to the correct index within this variable
-            books_data[$month_index][:review] = book_review
+            $books_data[$month_index][:review] = book_review
             
             # rewrite the csv with titles
             CSV.open("bookclub.csv", "w") do |csv| 
@@ -152,13 +171,33 @@ def review_a_book
             end
             
             # iterate through the variable and push it to the csv
-            books_data.each do |row|
+            $books_data.each do |row|
                 CSV.open("bookclub.csv", "a") do |csv| 
                     csv << row.values 
                 end
             end
-            break
         end
+        another_review = $prompt.yes?("Would you like to write another review?", active_color: :bright_blue)
+    break if another_review == false    
+    end
+end
+
+def read_a_review
+    puts "Let's see what you've written about your club books!"
+    loop do
+    find_a_month
+
+    if $month_index == nil
+        puts "Sorry, that month doesn't have any books allocated to it yet."
+    elsif $books_data[$month_index][:review] == nil
+        puts "#{$month_action}'s book #{$books_data[$month_index][:title]} hasn't got any reviews yet."
+    else
+        puts "#{$month_action}'s book #{$books_data[$month_index][:title]} has the following review:"
+        puts $books_data[$month_index][:review]
+    end
+
+    another_review = $prompt.yes?("Would you like to read another review?", active_color: :bright_blue)
+    break if another_review == false
     end
 end
 

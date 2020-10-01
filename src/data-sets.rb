@@ -2,8 +2,9 @@ $main_menu = {
     "Find a book" => 1, 
     "View your club calendar" => 2, 
     "Write a review" => 3, 
-    "Learn about Book-Bosomed and get help" => 4,
-    "Exit" => 5
+    "Read a review" => 4,
+    "Learn about Book-Bosomed and get help" => 5,
+    "Exit" => 6
 }
 
 $months = [
@@ -30,7 +31,11 @@ $genres = [
     "young adult",
     "romance",
     "thriller",
-    "history",
-    "science fiction"
+    "historical",
+    "science fiction",
+    "social science",
+    "self help",
+    "classical",
+    "adventure"
 ]
 

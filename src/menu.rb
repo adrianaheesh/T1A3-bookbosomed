@@ -36,7 +36,9 @@ elsif menu_action == 2 # view the club calendar
     view_calendar
 elsif menu_action == 3 # review a book
     review_a_book
-elsif menu_action == 4 # get help
+elsif menu_action == 4 # read a review
+    read_a_review
+elsif menu_action == 5 # get help
     learn_more
 else menu_action == 5 # quit the app
     exit_action = $prompt.yes?("Are you sure you want to exit Book-Bosomed?", active_color: :bright_blue)
