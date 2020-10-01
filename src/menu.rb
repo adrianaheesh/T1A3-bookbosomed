@@ -36,7 +36,7 @@ if menu_action == 1
 elsif menu_action == 2
     view_calendar
 elsif menu_action == 3
-    # call rewrite method
+    review_a_book
 elsif menu_action == 4
     # help menu
 else menu_action == 5

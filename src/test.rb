@@ -25,3 +25,8 @@ books[0] = {
 
 p books
 
+
+books[0][:rating] = 62, 65
+books[0][:review] = "string of input", "another string"
+
+p books
