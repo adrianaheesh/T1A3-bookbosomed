@@ -14,7 +14,7 @@ puts pastel.bright_blue.inverse("                                             We
 loop do
 menu_action = $prompt.select("What what you like to do?", $main_menu, show_help: :always, active_color: :bright_blue)
 
-if menu_action == 1
+if menu_action == 1 # search for a book
     loop do
         search_method = find_a_book_title
         if search_method == "random"
@@ -33,13 +33,13 @@ if menu_action == 1
         search_again = $prompt.yes?("Would you like to search again?", active_color: :bright_blue)
     break if search_again == false
     end
-elsif menu_action == 2
+elsif menu_action == 2 # view the club calendar
     view_calendar
-elsif menu_action == 3
+elsif menu_action == 3 # review a book
     review_a_book
-elsif menu_action == 4
-    # help menu
-else menu_action == 5
+elsif menu_action == 4 # get help
+    learn_more
+else menu_action == 5 # quit the app
     exit_action = $prompt.yes?("Are you sure you want to exit Book-Bosomed?", active_color: :bright_blue)
     if exit_action == true
         exit

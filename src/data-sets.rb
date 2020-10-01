@@ -2,7 +2,7 @@ $main_menu = {
     "Find a book" => 1, 
     "View your club calendar" => 2, 
     "Write a review" => 3, 
-    "Get help" => 4,
+    "Learn about Book-Bosomed and get help" => 4,
     "Exit" => 5
 }
 

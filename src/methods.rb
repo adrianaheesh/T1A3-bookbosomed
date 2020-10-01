@@ -137,15 +137,16 @@ def review_a_book
         if $month_index == nil
             puts "Sorry, that month doesn't have any books allocated to it yet."
         else 
-            # $month_index.nil? 
             book_review = $prompt.ask("Please type your review", active_color: :bright_blue)
-            # assign this review to the correct index
+            # assign this review to the correct index within this variable
             books_data[$month_index][:review] = book_review
             
+            # rewrite the csv with titles
             CSV.open("bookclub.csv", "w") do |csv| 
                 csv << [:month, :title, :author, :rating, :review]
             end
             
+            # iterate through the variable and push it to the csv
             books_data.each do |row|
                 CSV.open("bookclub.csv", "a") do |csv| 
                     csv << row.values 
@@ -154,4 +155,14 @@ def review_a_book
             break
         end
     end
+end
+
+# Learn about the app and get help
+def learn_more
+    puts "Book-Bosomed is your all in one book-club manager. Easily find books based on the title or author, or even general key words like 'cats' or 'dogs'.\n 
+    This app will automatically provide you with the top 5 Google Books search results for that particular keyword. But hey, we know that sometimes you\n 
+    don't know what you're looking for! You can search 'random' and we'll generate 5 books on a random topic for you to look over.\n 
+    Once you're happy with your book you can choose to add it to your club calendar. Easily track and see your upcoming book assignments \n
+    by selecting 'view calendar' from the main menu. Once you've read a book, you can easily write your own review through the main menu. Simply\n
+    select the month for that book, write out your review and viola - it's stored away for another time."
 end
