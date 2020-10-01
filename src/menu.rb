@@ -46,14 +46,3 @@ else menu_action == 5
     end
 end
 end
-
-# NOT SURE IF WILL NEED THIS BIT YET
-# options_action = $prompt.yes?("Would you like to see your club calendar?", active_color: :bright_blue)
-# if options_action == true
-#     view_calendar
-# end
-
-# method for getting search parameters
-# method for outputting the csv
-# method for pushing new data to csv
-# method for overriding data to csv
