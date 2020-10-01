@@ -54,6 +54,15 @@ def add_to_calendar(top_results, book_to_add)
                 rating: top_results[book_to_add][:rating],
                 review: nil
             }
+            # updated data variable, now need to push new version to csv
+            CSV.open("bookclub.csv", "w") do |csv| 
+                csv << [:month, :title, :author, :rating, :review]
+            end
+            data.each do |row|
+                CSV.open("bookclub.csv", "a") do |csv| 
+                    csv << row.values 
+                end
+            end
             puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
         else 
             puts "No worries, pick a new month to allocate your book to." 
