@@ -1,5 +1,8 @@
 require_relative 'apikey.rb'
+require_relative 'main.rb'
+require_relative 'data-sets.rb'
 require 'tty-table'
+require 'csv'
 
 def search(keyword)
     url = "https://www.googleapis.com/books/v1/volumes?q=#{keyword}&maxResults=5&key=#{$apikey}"
@@ -27,52 +30,48 @@ def search(keyword)
 end
 
 # method for adding a book to the calendar
-def calendar(top_results)
-    puts "Which month would you like to add this book to?"
-    month_action = gets.chomp.downcase 
+def add_to_calendar(top_results, book_to_add)
+    month_action = $prompt.select("Which month would you like to add this book to?", $months, active_color: :bright_blue)    
+    
+    # use gem to turn csv into array of hashes
     data = SmarterCSV.process("bookclub.csv")
-    # this will need to be a method because it is repeated for the review section
-    data.each_with_index do |row, index|
+
+    # iterate through the array of hashes and determing if the month is taken or not
+    data.each do |row|
         if month_action == row[:month]
-            puts "You already have a book for #{month_action.capitalize}."
-            override_action = $prompt.yes?("Would you like to search again?")
-            if override_action == true
-                data[index] = {
-                    month: month_action,
-                    title: top_results[book_to_add][:title],
-                    author: top_results[book_to_add][:author],
-                    rating: top_results[book_to_add][:rating],
-                    review: nil
-                }
-                puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
-            else override_action == "n"
-                puts "Which month would you like to add this book to instead?"
-                month_action = gets.chomp.downcase
-            end
+            $month_taken = true
+        else
+            $month_taken = false
+        end
+    end
+
+    if $month_taken == true
+        puts "You've already allocated a book to #{month_action}."
+        override_action = $prompt.yes?("Do you want to override this month?", active_color: :bright_blue)
+        if override_action == true
+            # figure out how to override data lol
+                # data[index] = {
+                #     month: month_action,
+                #     title: top_results[book_to_add][:title],
+                #     author: top_results[book_to_add][:author],
+                #     rating: top_results[book_to_add][:rating],
+                #     review: nil
+                # }
+            puts "Great, #{top_results[book_to_add][:title]} has been added to #{month_action.capitalize}."
         else 
-            # override the existing csv and push titles
-            CSV.open("bookclub.csv", "w") do |csv| 
-                csv << [:month, :title, :author, :rating, :review]
-            end
-            # iterate through the variable 'data' and push the existing row values into the file
-            data.each do |row|
-                CSV.open("bookclub.csv", "a") { |csv| csv << row.values }
-            end
-            add the new book to the csv file
-        end 
-    end
-    CSV.open("bookclub.csv", "a") do |csv| 
-        csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
-    end
-    options_action = $prompt.yes?("Would you like to see your club calendar?")
-    if options_action == true
-        view_calendar
+            puts "No worries, pick a new month to allocate your book to." 
+            month_action = $prompt.select("Which month would you like to add this book to?", $months, active_color: :bright_blue)
+        end
+    else $month_taken == false
+        CSV.open("bookclub.csv", "a") do |csv| 
+            csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+        end
     end
 end
 
 def view_calendar
     CSV.foreach("bookclub.csv", headers: true) do |row|
-        puts "In #{row['month'].capitalize.colorize(:red)}, you're reading #{row['title'].colorize(:blue)} by #{row['author'].colorize(:yellow)}."
+        puts "In #{row['month'].capitalize}, you're reading #{row['title']} by #{row['author']}."
     end
 end
 
@@ -81,4 +80,33 @@ def find_a_book_title
     search_method = gets.chomp.downcase
     return search_method
 end
+
+
+
+
+# else  
+#     # override the existing csv and push titles
+#     CSV.open("bookclub.csv", "w") do |csv| 
+#         csv << [:month, :title, :author, :rating, :review]
+#     end
+
+#     # iterate through the variable 'data' and push the existing row values into the file
+#     data.each do |row|
+#         CSV.open("bookclub.csv", "a") do |csv| 
+#             csv << row.values 
+#         end
+#     end
+
+#     # add the new book to the bottom of the csv file
+#     CSV.open("bookclub.csv", "a") do |csv| 
+#         csv << [month_action, top_results[book_to_add][:title], top_results[book_to_add][:author], top_results[book_to_add][:rating]]
+#     end
+# end 
+
+
+# remove any duplicate months
+# data = data.uniq! 
+# data.each do |row|
+#     csv << row.values
+# end
 
