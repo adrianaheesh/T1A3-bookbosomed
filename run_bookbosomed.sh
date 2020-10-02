@@ -1,4 +1,5 @@
 #!/bin/bash
 
 cd src
-ruby menu.rb 
+
+RUBYOPT='-W:no-deprecated -W:no-experimental' ruby menu.rb
