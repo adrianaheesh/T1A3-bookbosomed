@@ -2,7 +2,7 @@
 ## Adriana Heesh T1A3
 
 Source control repository: https://github.com/adrianaheesh/T1A3-bookbosomed
-Insert screen shot here
+![App GitHub](docs/github-screenshot.png)
 
 ## Purpose and Scope
 
@@ -67,6 +67,7 @@ Style standard set by Lucidchart 2020.
 ## Implementation Plan
 
 Link to my Trello board: https://trello.com/b/tlgodYZ7/t1a3-ruby-app 
+![Trello Board](docs/trello-screenshot.png)
 
 The book finding feature will be implemented by:
 1. Write pseudocode to guide implementation of feature
