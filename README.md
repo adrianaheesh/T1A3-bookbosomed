@@ -62,7 +62,7 @@ The gem 'tty-prompt' manages most user input error issues, however some issues c
 ## Diagram of Control Flow
 
 Style standard set by Lucidchart 2020. 
-
+![App Flowchart](docs/app-flowchart.jpg)
 
 ## Implementation Plan
 
@@ -106,11 +106,6 @@ Implementing book reviews will be done by:
 This feature should be finished and working by Friday, October 2. It has a medium to easy level of difficulty as it reuses some of the thinking from the previous function. 
 
 ## Help Documentation
-
-- steps to install the app
-- any dependencies
-- system/hardware requirements
-
 ### Steps to install
 
 All files needed to run this app are uploaded to Canvas in a zip file. This file should be downloaded from Canvas, as it contains hidden files (hiding my API key) that aren't available from my public Github repository. Once this file has been downloaded, navigate into the AdrianaHeesh_T1A3 directory in your terminal, then execute
