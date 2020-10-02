@@ -188,10 +188,11 @@ end
 
 # Learn about the app and get help
 def learn_more
-    puts "Book-Bosomed is your all in one book-club manager. Easily find books based on the title or author, or even general key words like 'cats' or 'dogs'.\  
-    This app will automatically provide you with the top 5 Google Books search results for that particular keyword. But hey, we know that sometimes you\ 
-    don't know what you're looking for! You can search 'random' and we'll generate 5 books on a random topic for you to look over.\  
-    Once you're happy with your book you can choose to add it to your club calendar. Easily track and see your upcoming book assignments \ 
-    by selecting 'view calendar' from the main menu. Once you've read a book, you can easily write your own review through the main menu. Simply\ 
-    select the month for that book, write out your review and viola - it's stored away for another time."
+    puts "Book-Bosomed is your all in one book-club manager. Easily find books based on the title or author, or even general\ 
+    key words like 'cats' or 'dogs'. This app will automatically provide you with the top 5 Google Books search results for\ 
+    that particular keyword. But hey, we know that sometimes you don't know what you're looking for! You can search 'random'\ 
+    and we'll generate 5 books on a random topic for you to look over. Once you're happy with your book you can choose to\ 
+    add it to your club calendar. Easily track and see your upcoming book assignments by selecting 'view calendar' from the\ 
+    main menu. Once you've read a book, you can easily write your own review through the main menu. Simply select the month\ 
+    for that book, write out your review and viola - it's stored away for another time."
 end
