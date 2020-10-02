@@ -24,7 +24,9 @@ Note: Ensure that your features above allow you to demonstrate your understandin
 - target audience
 - target audience intended use
 
-My application BookBosomed (which means to always carry a book on one's person), is designed to solve the problem of which book to dive into next for a book club each month. The user's of the app can be allocated a book from the Good Reads public API (powered by Amazon, a force when it comes to books online) within the app and invite other club members to see upcoming reads for their club calendar, as well as the book's synopsis and rating, snippets of top reviews, and key discussion topics to take note of while reading. The users will be able to rate and review a book once finished. 
+My application Book-Bosomed (which means to always carry a book on one's person), is designed to solve the problem of which book to dive into next for a book club each month. The user of the app can be allocated a book from the Google Books API by either searching the title or author, or selecting 'random' and having the app generate a book for them. The app will output five books from the search in order of highest rating to lowest, then provide the user with the option to add one of these titles to their book club calendar. The calendar can be viewed at any time, and the user also has the option to review a book, or read a review for a book. 
+
+Book-bosomed has a target audience of younger, tech-savvy book enthusiasts. Traditional book clubs meet in a book store or library and often have an older demographic. Book-bosomed however, reaches out to a younger audience because it is all managed digitally. The use is mostly intended for the club organiser or admnistrator, however future expansion could include login features that enable 
 
 ## Features
 
