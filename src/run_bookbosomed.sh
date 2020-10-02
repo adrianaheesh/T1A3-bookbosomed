@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd src
+# cd src
+gem install bundler
 bundle install
 clear
 

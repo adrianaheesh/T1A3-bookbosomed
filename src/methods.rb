@@ -194,5 +194,6 @@ def learn_more
     and we'll generate 5 books on a random topic for you to look over. Once you're happy with your book you can choose to\ 
     add it to your club calendar. Easily track and see your upcoming book assignments by selecting 'view calendar' from the\ 
     main menu. Once you've read a book, you can easily write your own review through the main menu. Simply select the month\ 
-    for that book, write out your review and viola - it's stored away for another time."
+    for that book, write out your review and viola - it's stored with that book's month and can be read at any time by\ 
+    choosing 'Read a review' from the menu."
 end
